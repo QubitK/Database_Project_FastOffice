@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Add Employee — Mailly{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="card" style="max-width:900px;margin:0 auto">
+    <h3>Add Employee</h3>
+
+    <form method="post" style="margin-top:12px">
+      {% csrf_token %}
+
+      <div style="margin-top:12px">
+        <label>Username</label>
+        <input class="input" type="text" name="username" required>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Email</label>
+        <input class="input" type="email" name="email" required>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Password</label>
+        <input class="input" type="password" name="password" required>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:12px;">
+        <div style="flex:1">
+          <label>First Name</label>
+          <input class="input" type="text" name="first_name" required>
+        </div>
+        <div style="flex:1">
+          <label>Last Name</label>
+          <input class="input" type="text" name="last_name" required>
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Contact</label>
+        <input class="input" type="text" name="contact">
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Address</label>
+        <input class="input" type="text" name="address">
+      </div>
+
+      <hr style="margin:18px 0">
+
+      <div style="margin-top:12px">
+        <label>Warehouse ID</label>
+        <input class="input" type="number" name="war_id" required>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Position</label>
+        <select class="input" name="emp_position" required>
+          <option value="">Select</option>
+          <option value="driver">Driver</option>
+          <option value="staff">Staff</option>
+        </select>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Schedule</label>
+        <input class="input" type="text" name="schedule">
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Wage</label>
+        <input class="input" type="number" step="0.01" name="wage" required>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Hire Date</label>
+        <input class="input" type="date" name="hire_date" required>
+      </div>
+
+      <hr style="margin:18px 0">
+
+      <h4>Driver Information (if driver)</h4>
+
+      <input class="input" type="text" name="license_number" placeholder="License Number" style="margin-top:8px">
+      <input class="input" type="text" name="license_category" placeholder="License Category" style="margin-top:8px">
+      <input class="input" type="date" name="license_expiry" style="margin-top:8px">
+      <input class="input" type="number" name="driving_experience" placeholder="Driving Experience (years)" style="margin-top:8px">
+      <input class="input" type="text" name="driver_status" placeholder="Driver Status" style="margin-top:8px">
+
+      <h4 style="margin-top:18px">Staff Information (if staff)</h4>
+
+      <input class="input" type="text" name="department" placeholder="Department" style="margin-top:8px">
+
+      <div style="margin-top:18px;display:flex;gap:12px">
+        <button class="btn btn-primary" type="submit">Save Employee</button>
+        <a class="btn" href="{% url 'employees_list' %}">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+</div>
+{% endblock %}

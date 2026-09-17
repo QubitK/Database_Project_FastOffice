@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Import Vehicles{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width:500px; margin:auto;">
+
+  <h3>Import Vehicles from JSON</h3>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Select JSON file:</label>
+
+    <input type="file" name="file" id="fileInput" accept=".json"
+           style="display:none;" onchange="updateFileName()">
+
+    <button type="button" class="btn btn-secondary"
+            onclick="document.getElementById('fileInput').click()">
+      Choose file
+    </button>
+
+    <span id="fileName" style="margin-left:10px; color:#ccc;">No file selected</span>
+
+    <br><br>
+
+    <button class="btn btn-primary" type="submit">Import</button>
+    <a class="btn btn-secondary" href="{% url 'vehicles_list' %}">Cancel</a>
+  </form>
+
+</div>
+
+<script>
+function updateFileName() {
+    const input = document.getElementById("fileInput");
+    const label = document.getElementById("fileName");
+
+    if (input.files.length > 0) {
+        label.textContent = input.files[0].name;
+    } else {
+        label.textContent = "No file selected";
+    }
+}
+</script>
+
+{% endblock %}

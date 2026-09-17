@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Delivery #{{ delivery.id }}{% endblock %}
+{% block content %}
+
+<div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+  <div>
+    <h2 style="margin:0;">Delivery #{{ delivery.id }}</h2>
+    <div class="muted" style="margin-top:6px">
+      Tracking: <strong>{{ delivery.tracking_number }}</strong>
+    </div>
+  </div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <a class="btn" href="{% url 'deliveries_tracking' delivery.tracking_number %}">
+      <i class="fa fa-location-dot"></i> Track
+    </a>
+
+    {% if request.user.role == "admin" or request.user.role == "manager" %}
+      <a class="btn" href="{% url 'deliveries_edit' delivery.id %}"><i class="fa fa-pen"></i> Edit</a>
+    {% endif %}
+
+    <a class="btn" href="{% url 'deliveries_list' %}">Back</a>
+  </div>
+</div>
+
+<div class="grid" style="margin-top:12px">
+  <aside class="sidebar">
+    <div class="card">
+      <h3 style="margin-top:0">Status</h3>
+      <div style="font-size:18px;margin-top:8px"><strong>{{ delivery.status }}</strong></div>
+      <div class="muted" style="margin-top:6px">Priority: {{ delivery.priority }}</div>
+      <div class="muted" style="margin-top:6px">Delivery date: {{ delivery.delivery_date|default:"—" }}</div>
+    </div>
+
+    {% if request.user.role == "admin" or request.user.role == "manager" %}
+      <div class="card" style="margin-top:12px">
+        <h3 style="margin-top:0">Update status</h3>
+
+        <form method="post" action="{% url 'deliveries_update_status' delivery.id %}">
+          {% csrf_token %}
+
+          <label for="status">New status</label>
+          <select id="status" name="status" required>
+            <option value="registered">registered</option>
+            <option value="ready">ready</option>
+            <option value="pending">pending</option>
+            <option value="in_transit">in_transit</option>
+            <option value="completed">completed</option>
+            <option value="cancelled">cancelled</option>
+          </select>
+
+
+          <label style="margin-top:12px" for="staff_id">Staff ID</label>
+          <input id="staff_id" name="staff_id" type="number" placeholder="e.g. 12">
+
+          <label style="margin-top:12px" for="warehouse_id">Warehouse ID</label>
+          <input id="warehouse_id" name="warehouse_id" type="number" placeholder="e.g. 3">
+
+          <label style="margin-top:12px" for="notes">Notes</label>
+          <textarea id="notes" name="notes" rows="3" placeholder="Optional..."></textarea>
+
+          <button class="btn btn-primary" style="margin-top:12px" type="submit">Update</button>
+        </form>
+      </div>
+    {% endif %}
+  </aside>
+
+  <section>
+    <div class="card">
+      <h3 style="margin-top:0">Sender</h3>
+      <div class="muted">{{ delivery.sender_name }}</div>
+      <div class="muted">{{ delivery.sender_address }}</div>
+      <div class="muted">{{ delivery.sender_phone }}</div>
+      <div class="muted">{{ delivery.sender_email }}</div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3 style="margin-top:0">Recipient</h3>
+      <div class="muted">{{ delivery.recipient_name }}</div>
+      <div class="muted">{{ delivery.recipient_address }}</div>
+      <div class="muted">{{ delivery.recipient_phone }}</div>
+      <div class="muted">{{ delivery.recipient_email }}</div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3 style="margin-top:0">Package</h3>
+      <div class="muted">Type: {{ delivery.item_type }}</div>
+      <div class="muted">Weight: {{ delivery.weight }}</div>
+      <div class="muted">Dimensions: {{ delivery.dimensions }}</div>
+      <div class="muted">Description: {{ delivery.description }}</div>
+    </div>
+  </section>
+</div>
+
+{% endblock %}

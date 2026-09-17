@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Edit Invoice — Mailly{% endblock %}
+{% block content %}
+<div class="card">
+  <h3>Edit Invoice #{{ invoice.id_invoice }}</h3>
+  <form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <h4>Invoice Items</h4>
+  {{ formset.management_form }}
+
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>Shipment Type</th>
+        <th>Weight</th>
+        <th>Delivery Speed</th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+        <th>Notes</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item_form in formset %}
+      <tr>
+        <td>{{ item_form.shipment_type }}</td>
+        <td>{{ item_form.weight }}</td>
+        <td>{{ item_form.delivery_speed }}</td>
+        <td>{{ item_form.quantity }}</td>
+        <td>{{ item_form.unit_price }}</td>
+        <td>{{ item_form.notes }}</td>
+        <td>{{ item_form.DELETE }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <button type="submit" class="btn btn-primary">Update Invoice</button>
+</form>
+
+</div>
+{% endblock %}

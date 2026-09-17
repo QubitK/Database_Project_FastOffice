@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Login — Page{% endblock %}
+{% block content %}
+<div class="grid">
+  <div class="card" style="display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:320px">
+    <h2 style="margin:0 0 8px">Welcome back</h2>
+    <p class="muted">Sign in to manage mail and deliveries</p>
+
+    <!-- Messages -->
+    {% if messages %}
+  <div style="width:100%;max-width:420px;margin-bottom:12px">
+    {% for message in messages %}
+      <div style="background:#ef4444;color:white;padding:10px;border-radius:10px;margin-bottom:6px">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+    <form method="post" style="width:100%;max-width:420px;margin-top:18px">{% csrf_token %}
+      <label for="username">Email or username</label>
+      <input id="username" name="username" type="text" placeholder="you@example.com" required>
+      <label for="password" style="margin-top:12px">Password</label>
+      <input id="password" name="password" type="password" placeholder="••••••" required>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+        <label class="muted"><input type="checkbox" name="remember"> Remember me</label>
+        <a class="muted" href="#">Forgot?</a>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:18px">
+        <button class="btn btn-primary" type="submit">Sign in</button>
+        <a class="btn" href="{% url 'register' %}">Create account</a>
+      </div>
+    </form>
+  </div>
+
+  <aside class="sidebar">
+    <h3 style="margin-top:0"></h3>
+    <p class="muted">Track letters & packages across warehouses, assign deliveries, and process payments in one place.</p>
+    <div style="margin-top:12px" class="card">
+      <strong>Security</strong>
+      <div class="muted" style="font-size:13px;margin-top:8px">Two-factor auth available for enterprise accounts.</div>
+    </div>
+  </aside>
+</div>
+{% endblock %}

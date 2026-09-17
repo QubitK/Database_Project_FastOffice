@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Add Warehouse — Fast Office{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="card" style="max-width:800px;margin:0 auto">
+    <h3>Add Warehouse</h3>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div style="margin-top:12px">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+
+      <div style="margin-top:12px">
+        <label for="address">Address</label>
+        <input type="text" id="address" name="address" required>
+      </div>
+
+      <div style="margin-top:12px">
+        <label for="contact">Contact</label>
+        <input type="text" id="contact" name="contact">
+      </div>
+
+      <div style="margin-top:12px">
+        <label for="po_schedule_open">Opening time</label>
+        <input type="text" id="po_schedule_open" name="po_schedule_open">
+      </div>
+
+      <div style="margin-top:12px">
+        <label for="po_schedule_close">Closing time</label>
+        <input type="text" id="po_schedule_close" name="po_schedule_close">
+      </div>
+
+      <div style="margin-top:12px">
+        <label for="maximum_storage_capacity">Maximum storage capacity</label>
+        <input type="number" id="maximum_storage_capacity" name="maximum_storage_capacity" min="0">
+      </div>
+
+      <div style="margin-top:18px;display:flex;gap:12px">
+        <button class="btn btn-primary" type="submit">Save Warehouse</button>
+        <a class="btn" href="{% url 'warehouses_list' %}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

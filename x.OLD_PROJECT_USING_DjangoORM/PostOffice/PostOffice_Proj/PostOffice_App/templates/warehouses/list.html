@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Warehouses — Mailly{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center;">
+  <h3 style="margin:0;">Warehouses</h3>
+  {% if request.user.role == 'admin' %}
+  <div style="display:flex; gap:8px;">
+    <a class="btn btn-primary" href="{% url 'warehouses_create' %}">
+      + New Warehouse
+    </a>
+    <a class="btn btn-warning" href="{% url 'warehouses_import_json' %}">
+      <i class="fa fa-upload"></i> Import JSON
+    </a>
+    <a class="btn btn-success" href="{% url 'warehouses_export_json' %}">
+      <i class="fa fa-download"></i> Export JSON
+    </a>
+    <a class="btn btn-info" href="{% url 'warehouses_export_csv' %}">
+      <i class="fa fa-file-csv"></i> Export CSV
+    </a>
+  </div>
+  {% endif %}
+</div>
+<div class="card" style="margin-top:12px;">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Contact</th>
+        <th>Open</th>
+        <th>Close</th>
+        <th>Capacity</th>
+        <th style="text-align:right;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for w in warehouses %}
+        <tr>
+          <td><strong>{{ w.name }}</strong></td>
+          <td class="muted">{{ w.address }}</td>
+          <td class="muted">{{ w.contact }}</td>
+          <td class="muted">{{ w.po_schedule_open }}</td>
+          <td class="muted">{{ w.po_schedule_close }}</td>
+          <td class="muted">{{ w.maximum_storage_capacity }}</td>
+          <td style="text-align:right;">
+            {% if request.user.role == 'admin' or request.user.role == 'staff' %}
+              <a class="btn" href="{% url 'warehouses_edit' w.id %}">Edit</a>
+            {% endif %}
+            {% if request.user.role == 'admin' %}
+              <form method="post" action="{% url 'warehouses_delete' w.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button class="btn" type="submit" onclick="return confirm('Delete this warehouse?');">Delete</button>
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="7" class="muted" style="text-align:center; padding:16px;">No warehouses found</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

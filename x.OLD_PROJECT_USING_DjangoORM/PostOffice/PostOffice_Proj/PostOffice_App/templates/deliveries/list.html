@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Deliveries — Mailly{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center;">
+  <h3 style="margin:0;">Deliveries</h3>
+
+  {% if request.user.role == 'admin' or request.user.role == 'staff' %}
+  <div>
+      <a class="btn btn-primary" href="{% url 'deliveries_create' %}">
+          + New Delivery
+      </a>
+      <a class="btn btn-warning" href="{% url 'deliveries_import_json' %}">
+          <i class="fa fa-upload"></i> Import JSON
+      </a>
+      <a class="btn btn-success" href="{% url 'deliveries_export_json' %}">
+          <i class="fa fa-download"></i> Export JSON
+      </a>
+      <a class="btn btn-info" href="{% url 'deliveries_export_csv' %}">
+          <i class="fa fa-file-csv"></i> Export CSV
+      </a>
+  </div>
+  {% endif %}
+</div>
+
+<div class="card" style="margin-top:12px">
+  <table class="table">
+    <thead><tr><th>Tracking</th><th>Driver</th><th>Vehicle</th><th>Delivery date</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for d in deliveries %}
+        <tr>
+          <td><strong>{{ d.tracking_number }}</strong></td>
+          <td class="muted">{% if d.driver %}{{ d.driver.user.get_full_name }}{% else %}-{% endif %}</td>
+          <td class="muted">{% if d.vehicle %}{{ d.vehicle.plate_number }}{% else %}-{% endif %}</td>
+          <td class="muted">{{ d.delivery_date }}</td>
+          <td class="muted">{{ d.status }}</td>
+          <td style="text-align:right">
+            {% if d.id %}
+              <a class="btn btn-primary" href="{% url 'deliveries_detail' d.id %}">View</a>
+              {% if request.user.role == 'admin' or request.user.role == 'staff' %}<a class="btn" href="{% url 'deliveries_edit' d.id %}">Edit</a>{% endif %}
+            {% else %}
+              <span class="text-muted">No ID</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6" class="muted">No deliveries</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

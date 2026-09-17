@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Deliveries{% endblock %}
+{% block content %}
+
+<div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+  <h2 style="margin:0;">Deliveries</h2>
+
+  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    {% if request.user.role == "admin" or request.user.role == "manager" %}
+      <a class="btn btn-primary" href="{% url 'deliveries_create' %}"><i class="fa fa-plus"></i> New Delivery</a>
+      <a class="btn" href="{% url 'deliveries_import_json' %}"><i class="fa fa-upload"></i> Import JSON</a>
+      <a class="btn" href="{% url 'deliveries_export_json' %}"><i class="fa fa-download"></i> Export JSON</a>
+      <a class="btn" href="{% url 'deliveries_export_csv' %}"><i class="fa fa-file-csv"></i> Export CSV</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card" style="margin-top:12px;">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Tracking</th>
+        <th>Client</th>
+        <th>Warehouse</th>
+        <th>Status</th>
+        <th>Priority</th>
+        <th style="text-align:right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in deliveries %}
+        <tr>
+          <td class="muted">{{ d.id }}</td>
+          <td><strong>{{ d.tracking_number }}</strong></td>
+          <td class="muted">{{ d.sender_name|default:"-" }}</td>
+          <td class="muted">{{ d.warehouse_name|default:"-" }}</td>
+          <td>{{ d.status }}</td>
+          <td class="muted">{{ d.priority }}</td>
+          <td style="text-align:right">
+            <a class="btn" href="{% url 'deliveries_detail' d.id %}">Detail</a>
+
+            {% if request.user.role == "admin" or request.user.role == "manager" %}
+              <a class="btn" href="{% url 'deliveries_edit' d.id %}">Edit</a>
+              <form method="post" action="{% url 'deliveries_delete' d.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button class="btn" type="submit" onclick="return confirm('Cancel this delivery?');">Delete</button>
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="7" class="muted" style="text-align:center;padding:16px;">No deliveries found</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

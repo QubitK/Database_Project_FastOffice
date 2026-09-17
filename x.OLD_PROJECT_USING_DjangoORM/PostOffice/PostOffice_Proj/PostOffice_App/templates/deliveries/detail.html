@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Delivery Details — Mailly{% endblock %}
+{% block content %}
+<div class="card" style="padding: 20px; max-width:900px; margin:0 auto">
+  <h2>Delivery Details</h2>
+  <div style="margin-top:12px">
+    <h4>Basic Info</h4>
+    <p><strong>ID:</strong> {{ delivery.id }}</p>
+    <p><strong>Tracking Number:</strong> {{ delivery.tracking_number }}</p>
+    <p><strong>Status:</strong> {{ delivery.status }}</p>
+    <p><strong>Priority:</strong> {{ delivery.get_priority_display }}</p>
+    <p><strong>Item Type:</strong> {{ delivery.item_type }}</p>
+    <p><strong>Weight:</strong> {{ delivery.weight }} g</p>
+    <p><strong>Dimensions:</strong> {{ delivery.dimensions }}</p>
+    <p><strong>Destination:</strong> {{ delivery.destination }}</p>
+    <p><strong>Delivery Date:</strong> {{ delivery.delivery_date }}</p>
+    <p><strong>Registered At:</strong> {{ delivery.registered_at }}</p>
+    <p><strong>Updated At:</strong> {{ delivery.updated_at }}</p>
+    <p><strong>In Transition:</strong> {{ delivery.in_transition }}</p>
+    <p><strong>Client:</strong> {% if delivery.client %}{{ delivery.client.get_full_name }}{% else %}N/A{% endif %}</p>
+    <p><strong>Driver:</strong> {% if delivery.driver %}{{ delivery.driver.user.get_full_name }}{% else %}N/A{% endif %}</p>
+    <p><strong>Vehicle:</strong> {% if delivery.vehicle %}{{ delivery.vehicle.plate_number }}{% else %}N/A{% endif %}</p>
+  </div>
+
+  <hr>
+  <div>
+    <h4>Sender</h4>
+    <p><strong>Name:</strong> {{ delivery.sender_name }}</p>
+    <p><strong>Address:</strong> {{ delivery.sender_address }}</p>
+    <p><strong>Phone:</strong> {{ delivery.sender_phone }}</p>
+    <p><strong>Email:</strong> {{ delivery.sender_email }}</p>
+  </div>
+
+  <hr>
+  <div>
+    <h4>Recipient</h4>
+    <p><strong>Name:</strong> {{ delivery.recipient_name }}</p>
+    <p><strong>Address:</strong> {{ delivery.recipient_address }}</p>
+    <p><strong>Phone:</strong> {{ delivery.recipient_phone }}</p>
+    <p><strong>Email:</strong> {{ delivery.recipient_email }}</p>
+  </div>
+
+  <hr>
+  <a class="btn" href="{% url 'deliveries_list' %}">Back to List</a>
+</div>
+{% endblock %}

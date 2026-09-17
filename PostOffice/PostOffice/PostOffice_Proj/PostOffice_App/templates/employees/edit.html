@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Edit Employee — Mailly{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="card" style="max-width:900px;margin:0 auto">
+    <h3>Edit Employee</h3>
+
+    <form method="post" style="margin-top:12px">
+      {% csrf_token %}
+
+      <div style="margin-top:12px">
+        <label>Email</label>
+        <input class="input" type="email" name="email" value="{{ employee.email }}">
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:12px;">
+        <div style="flex:1">
+          <label>First Name</label>
+          <input class="input" type="text" name="first_name" value="{{ employee.first_name }}">
+        </div>
+        <div style="flex:1">
+          <label>Last Name</label>
+          <input class="input" type="text" name="last_name" value="{{ employee.last_name }}">
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Contact</label>
+        <input class="input" type="text" name="contact" value="{{ employee.contact }}">
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Address</label>
+        <input class="input" type="text" name="address" value="{{ employee.address }}">
+      </div>
+
+      <hr style="margin:18px 0">
+
+      <div style="margin-top:12px">
+        <label>Position</label>
+        <select class="input" name="emp_position">
+          <option value="driver" {% if employee.emp_position == 'driver' %}selected{% endif %}>Driver</option>
+          <option value="staff" {% if employee.emp_position == 'staff' %}selected{% endif %}>Staff</option>
+        </select>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Schedule</label>
+        <input class="input" type="text" name="schedule" value="{{ employee.schedule }}">
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Wage</label>
+        <input class="input" type="number" step="0.01" name="wage" value="{{ employee.wage }}">
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Active</label>
+        <select class="input" name="is_active">
+          <option value="true" {% if employee.is_active %}selected{% endif %}>Yes</option>
+          <option value="false" {% if not employee.is_active %}selected{% endif %}>No</option>
+        </select>
+      </div>
+
+      <hr style="margin:18px 0">
+
+      <h4>Driver Information</h4>
+      <input class="input" type="text" name="license_number" value="{{ employee.license_number }}" style="margin-top:8px">
+      <input class="input" type="text" name="license_category" value="{{ employee.license_category }}" style="margin-top:8px">
+      <input class="input" type="date" name="license_expiry" value="{{ employee.license_expiry_date }}" style="margin-top:8px">
+      <input class="input" type="number" name="driving_experience" value="{{ employee.driving_experience_years }}" style="margin-top:8px">
+      <input class="input" type="text" name="driver_status" value="{{ employee.driver_status }}" style="margin-top:8px">
+
+      <h4 style="margin-top:18px">Staff Information</h4>
+      <input class="input" type="text" name="department" value="{{ employee.department }}" style="margin-top:8px">
+
+      <div style="margin-top:18px;display:flex;gap:12px">
+        <button class="btn btn-primary" type="submit">Save Changes</button>
+        <a class="btn" href="{% url 'employees_list' %}">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+</div>
+{% endblock %}

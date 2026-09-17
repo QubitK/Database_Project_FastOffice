@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block title %}Edit Delivery{% endblock %}
+{% block content %}
+<div class="card" style="max-width:980px;margin:0 auto">
+  <h2 style="margin-top:0">Edit Delivery</h2>
+
+  {% if messages %}
+  <div style="margin:12px 0;">
+    {% for message in messages %}
+      <div class="card" style="margin-bottom:8px;">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% if form and form.errors %}
+  <div class="card" style="margin-bottom:12px; border:1px solid #f5c2c7;">
+    <strong>Form errors:</strong>
+    <div class="muted" style="margin-top:6px">{{ form.errors }}</div>
+  </div>
+{% endif %}
+
+  <form method="post">{% csrf_token %}
+
+    <div class="row">
+      <div style="flex:1">
+        <label>Driver ID</label>
+        <input type="number" name="driver_id" value="{% if form %}{{ form.data.driver_id|default:delivery.driver_id|default:'' }}{% else %}{{ delivery.driver_id|default:'' }}{% endif %}">
+      </div>
+      <div style="flex:1">
+        <label>Route ID</label>
+        <input type="number" name="route_id" value="{% if form %}{{ form.data.route_id|default:delivery.route_id|default:'' }}{% else %}{{ delivery.route_id|default:'' }}{% endif %}">
+      </div>
+      <div style="flex:1">
+        <label>Invoice ID</label>
+        <input type="number" name="inv_id" value="{% if form %}{{ form.data.inv_id|default:delivery.inv_id|default:'' }}{% else %}{{ delivery.inv_id|default:'' }}{% endif %}">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px">
+      <div style="flex:1">
+        <label>Client ID</label>
+        <input type="number" name="client_id" value="{% if form %}{{ form.data.client_id|default:delivery.client_id|default:'' }}{% else %}{{ delivery.client_id|default:'' }}{% endif %}">
+      </div>
+      <div style="flex:1">
+        <label>Warehouse ID</label>
+        <input type="number" name="war_id" value="{% if form %}{{ form.data.war_id|default:delivery.war_id|default:'' }}{% else %}{{ delivery.war_id|default:'' }}{% endif %}">
+      </div>
+      <div style="flex:1">
+        <label>Tracking number</label>
+        <input type="text" name="tracking_number" value="{% if form %}{{ form.data.tracking_number|default:delivery.tracking_number|default:'' }}{% else %}{{ delivery.tracking_number|default:'' }}{% endif %}">
+      </div>
+    </div>
+
+    <label style="margin-top:12px">Description</label>
+    <textarea name="description" rows="3">{% if form %}{{ form.data.description|default:delivery.description|default:'' }}{% else %}{{ delivery.description|default:'' }}{% endif %}</textarea>
+
+    <div class="row" style="margin-top:12px">
+      <div style="flex:1">
+        <label>Sender name</label>
+        <input type="text" name="sender_name" value="{% if form %}{{ form.data.sender_name|default:delivery.sender_name|default:'' }}{% else %}{{ delivery.sender_name|default:'' }}{% endif %}">
+      </div>
+      <div style="flex:1">
+        <label>Sender phone</label>
+        <input type="text" name="sender_phone" value="{% if form %}{{ form.data.sender_phone|default:delivery.sender_phone|default:'' }}{% else %}{{ delivery.sender_phone|default:'' }}{% endif %}">
+      </div>
+    </div>
+
+    <label style="margin-top:12px">Sender address</label>
+    <input type="text" name="sender_address" value="{% if form %}{{ form.data.sender_address|default:delivery.sender_address|default:'' }}{% else %}{{ delivery.sender_address|default:'' }}{% endif %}">
+
+    <label style="margin-top:12px">Sender email</label>
+    <input type="email" name="sender_email" value="{% if form %}{{ form.data.sender_email|default:delivery.sender_email|default:'' }}{% else %}{{ delivery.sender_email|default:'' }}{% endif %}">
+
+    <div class="row" style="margin-top:12px">
+      <div style="flex:1">
+        <label>Recipient name</label>
+        <input type="text" name="recipient_name" value="{% if form %}{{ form.data.recipient_name|default:delivery.recipient_name|default:'' }}{% else %}{{ delivery.recipient_name|default:'' }}{% endif %}">
+      </div>
+      <div style="flex:1">
+        <label>Recipient phone</label>
+        <input type="text" name="recipient_phone" value="{% if form %}{{ form.data.recipient_phone|default:delivery.recipient_phone|default:'' }}{% else %}{{ delivery.recipient_phone|default:'' }}{% endif %}">
+      </div>
+    </div>
+
+    <label style="margin-top:12px">Recipient address</label>
+    <input type="text" name="recipient_address" value="{% if form %}{{ form.data.recipient_address|default:delivery.recipient_address|default:'' }}{% else %}{{ delivery.recipient_address|default:'' }}{% endif %}">
+
+    <label style="margin-top:12px">Recipient email</label>
+    <input type="email" name="recipient_email" value="{% if form %}{{ form.data.recipient_email|default:delivery.recipient_email|default:'' }}{% else %}{{ delivery.recipient_email|default:'' }}{% endif %}">
+
+    <div class="row" style="margin-top:12px">
+      <div style="flex:1">
+        <label>Item type</label>
+        <input type="text" name="item_type" value="{% if form %}{{ form.data.item_type|default:delivery.item_type|default:'' }}{% else %}{{ delivery.item_type|default:'' }}{% endif %}">
+      </div>
+      <div style="flex:1">
+        <label>Weight</label>
+        <input type="text" name="weight" value="{% if form %}{{ form.data.weight|default:delivery.weight|default:'' }}{% else %}{{ delivery.weight|default:'' }}{% endif %}">
+      </div>
+      <div style="flex:1">
+        <label>Dimensions</label>
+        <input type="text" name="dimensions" value="{% if form %}{{ form.data.dimensions|default:delivery.dimensions|default:'' }}{% else %}{{ delivery.dimensions|default:'' }}{% endif %}">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px">
+      <div style="flex:1">
+        <label>Priority</label>
+        <select name="priority">
+          {% with p=form.data.priority|default:delivery.priority %}
+            <option value="low" {% if p == "low" %}selected{% endif %}>low</option>
+            <option value="normal" {% if p == "normal" %}selected{% endif %}>normal</option>
+            <option value="high" {% if p == "high" %}selected{% endif %}>high</option>
+            <option value="urgent" {% if p == "urgent" %}selected{% endif %}>urgent</option>
+          {% endwith %}
+        </select>
+      </div>
+
+      <div style="flex:1">
+        <label style="display:flex; gap:8px; align-items:center; margin-top:22px;">
+          {% with it=form.data.in_transition|default:delivery.in_transition %}
+            <input type="checkbox" name="in_transition" {% if it %}checked{% endif %}>
+          {% endwith %}
+          In transition
+        </label>
+      </div>
+
+      <div style="flex:1">
+        <label>Delivery date</label>
+        <input type="date" name="delivery_date"
+               value="{% if form %}{{ form.data.delivery_date|default:delivery.delivery_date|date:'Y-m-d' }}{% else %}{{ delivery.delivery_date|date:'Y-m-d' }}{% endif %}">
+      </div>
+    </div>
+
+    <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" type="submit">Save Changes</button>
+      <a class="btn" href="{% url 'deliveries_list' %}">Cancel</a>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

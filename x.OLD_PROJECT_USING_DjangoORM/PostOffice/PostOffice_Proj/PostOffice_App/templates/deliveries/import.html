@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Import Deliveries{% endblock %}
+{% block content %}
+
+<style>
+.file-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+#real-file {
+    display: none;
+}
+
+.custom-file-button {
+    padding: 8px 14px;
+    background: #444;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#file-name {
+    margin-left: 10px;
+    color: #bbb;
+}
+</style>
+
+<div class="card">
+  <h3>Import Deliveries (JSON)</h3>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Select JSON file:</label><br><br>
+
+    <div class="file-wrapper">
+        <label for="real-file" class="custom-file-button">Choose file</label>
+        <span id="file-name">No file selected</span>
+        <input type="file" id="real-file" name="file" accept=".json">
+    </div>
+
+    <br><br>
+
+    <button type="submit" class="btn btn-primary">Import Deliveries</button>
+  </form>
+</div>
+
+<script>
+document.getElementById("real-file").addEventListener("change", function() {
+    const fileName = this.files.length > 0 ? this.files[0].name : "No file selected";
+    document.getElementById("file-name").textContent = fileName;
+});
+</script>
+
+{% endblock %}

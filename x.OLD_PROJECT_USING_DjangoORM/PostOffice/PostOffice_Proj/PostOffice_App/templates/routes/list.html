@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Routes — Mailly{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center;">
+  <h3 style="margin:0;">Routes</h3>
+  {% if request.user.role == 'admin' %}
+  <div style="display:flex; gap:8px;">
+    <a class="btn btn-primary" href="{% url 'routes_create' %}">
+      + New Route
+    </a>
+    <a class="btn btn-warning" href="{% url 'routes_import_json' %}">
+      <i class="fa fa-upload"></i> Import JSON
+    </a>
+    <a class="btn btn-success" href="{% url 'routes_export_json' %}">
+      <i class="fa fa-download"></i> Export JSON
+    </a>
+    <a class="btn btn-info" href="{% url 'routes_export_csv' %}">
+      <i class="fa fa-file-csv"></i> Export CSV
+    </a>
+  </div>
+  {% endif %}
+</div>
+<div class="card" style="margin-top:12px;">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Vehicle</th>
+        <th>Driver</th>
+        <th>Origin</th>
+        <th>Destination</th>
+        <th style="text-align:right;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in routes %}
+        <tr>
+          <td>{{ r.id }}</td>
+          <td>{{ r.description }}</td>
+          <td>{{ r.delivery_status }}</td>
+          <td class="muted">
+            {% if r.vehicle %}
+              {{ r.vehicle.plate_number }}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td class="muted">
+            {% if r.driver %}
+              {{ r.driver.user.full_name }}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td class="muted">{{ r.origin_name }}</td>
+          <td class="muted">{{ r.destination_name }}</td>
+          <td style="text-align:right;">
+            <a class="btn" href="{% url 'routes_edit' r.id %}">Edit</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="8" class="muted" style="text-align:center; padding:16px;">
+            No routes found
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Mail Service{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+
+  <style>
+    :root {
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#94a3b8;
+      --brand:#c08a2b;
+      --brand-dark:#9a6c1f;
+      --accent:#f6e8c8;
+      --success:#16a34a;
+      --danger:#ef4444;
+      --glass:rgba(255,255,255,0.03);
+      --radius:14px;
+      --max-width:1100px;
+      font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;
+      color-scheme:dark;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071024 0%,var(--bg) 100%);color:#e6eef8}
+    a{color:var(--accent);text-decoration:none}
+    .container{min-height:100vh;display:flex;flex-direction:column;max-width:var(--max-width);margin:10px auto;padding:15px}
+
+    /* NAV */
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;
+         background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
+         border-radius:12px;backdrop-filter:blur(6px);box-shadow:0 6px 24px rgba(2,6,23,0.6)}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:50px;height:50px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand-dark));
+          display:flex;align-items:center;justify-content:center;font-weight:700;color:#08203a}
+    .nav-links{display:flex;gap:8px;align-items:center}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 10px;border-radius:10px;
+         background:linear-gradient(180deg,var(--card),#071222);
+         border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    .btn-primary{background:linear-gradient(180deg,var(--brand),var(--brand-dark));color:#071022;border:none}
+
+    /* notification button */
+    .btn-notif {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:9px 12px;
+      border-radius:10px;
+      background:linear-gradient(180deg,var(--card),#071222);
+      border:1px solid rgba(255,255,255,0.03);
+      font-size:18px;
+      cursor:pointer;
+      color:var(--accent);
+      min-width:44px;
+      height:38px;
+    }
+    .btn-notif:hover {
+      background:linear-gradient(180deg,#0d182b,#081223);
+    }
+
+    /* notif dropdown */
+    #notif-menu {
+      display:none;
+      position:fixed;
+      top:80px;
+      right:40px;
+      background:var(--card);
+      color:#e6eef8;
+      border:1px solid rgba(255,255,255,0.05);
+      border-radius:12px;
+      list-style:none;
+      padding:10px;
+      width:300px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.55);
+      backdrop-filter:blur(6px);
+      z-index:9999;
+    }
+    #notif-menu li {
+      padding:10px;
+      border-bottom:1px solid rgba(255,255,255,0.05);
+      cursor:pointer;
+      font-size:14px;
+    }
+    #notif-menu li:last-child {
+      border-bottom:none;
+    }
+    #notif-menu small {
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    /* GRID */
+    .grid{display:grid;grid-template-columns:260px 1fr;gap:18px}
+    .sidebar{background:var(--card);padding:14px;border-radius:12px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:12px}
+
+    .stats{display:flex;gap:12px}
+    .stat{flex:1;padding:14px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.012),rgba(255,255,255,0.01))}
+    .muted{color:var(--muted);font-size:13px}
+
+    label{display:block;font-weight:600;margin-bottom:8px}
+    input[type=text],input[type=password],input[type=email],select,textarea{
+      width:100%;padding:12px;border-radius:10px;
+      border:1px solid rgba(255,255,255,0.04);
+      background:transparent;color:inherit
+    }
+    form .row{display:flex;gap:12px}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{padding:12px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.03)}
+
+    footer{margin-top:auto;color:var(--muted);font-size:13px}
+
+    @media (max-width:900px){.grid{grid-template-columns:1fr}.sidebar{order:2}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="nav">
+      <div class="brand">
+        <div class="logo">FO</div>
+        <div>
+          <div style="font-weight:700">Fast Office</div>
+          <div class="muted" style="font-size:12px">Letters & Packages</div>
+        </div>
+      </div>
+      <nav class="nav-links">
+        {% if request.user.is_authenticated %}
+          <a class="btn" href="{% url 'dashboard' %}">Dashboard</a>
+          {% if request.session.role == "admin" %}
+              <a class="btn" href="{% url 'warehouses_list' %}">Warehouses</a>
+              <a class="btn" href="{% url 'vehicles_list' %}">Vehicles</a>
+              <a class="btn" href="{% url 'routes_list' %}">Routes</a>
+              <a class="btn" href="{% url 'deliveries_list' %}">Deliveries</a>
+              <a class="btn" href="{% url 'invoice_list' %}">Invoices</a>
+          {% elif request.session.role == "driver" %}
+              <a class="btn" href="{% url 'deliveries_list' %}">Deliveries</a>
+          {% elif request.session.role == "client" %}
+              <a class="btn" href="{% url 'client_profile' %}">Profile</a>
+          {% endif %}
+
+          <button id="notifDropdown" class="btn-notif">🔔</button>
+          <ul id="notif-menu"></ul>
+
+          <a class="btn" href="{% url 'logout' %}">Logout</a>
+
+        {% else %}
+          <a class="btn" href="{% url 'login' %}">Login</a>
+          <a class="btn btn-primary" href="{% url 'register' %}">Register</a>
+        {% endif %}
+      </nav>
+    </header>
+
+    <main style="margin-top:22px">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+      <div class="muted">© {{year}} Fast Office — Quick and Reliable</div>
+    </footer>
+  </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  const bell = document.getElementById("notifDropdown");
+  const menu = document.getElementById("notif-menu");
+
+  bell.onclick = function(){
+    menu.style.display = (menu.style.display === "none") ? "block" : "none";
+  };
+
+  function loadNotifications(){
+    fetch("/notifications/")
+    .then(r => r.json())
+    .then(data => {
+      menu.innerHTML = "";
+      data.notifications.forEach(n => {
+        menu.innerHTML += `
+          <li onclick="markRead(${n.id})" style="font-weight:${n.is_read ? 'normal':'bold'}">
+            ${n.message}<br><small>${n.created_at}</small>
+          </li>`;
+      });
+    });
+  }
+
+  window.markRead = function(id){
+    fetch(`/notifications/read/${id}/`).then(() => loadNotifications());
+  }
+
+  loadNotifications();
+
+});
+</script>
+</body>
+</html>

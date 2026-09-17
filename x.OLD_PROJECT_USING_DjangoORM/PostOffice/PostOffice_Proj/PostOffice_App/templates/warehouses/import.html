@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Import Warehouses — Mailly{% endblock %}
+
+{% block content %}
+<div class="card">
+
+    <h3>Import Warehouses from JSON</h3>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label>Select JSON file:</label>
+
+        <!-- Fake button -->
+        <div style="margin: 10px 0;">
+            <label for="file-input"
+                   class="btn btn-secondary"
+                   style="cursor:pointer;">
+                Choose file
+            </label>
+            <span id="file-name" class="muted" style="margin-left:8px;">
+                No file selected
+            </span>
+            <input id="file-input" type="file" name="file"
+                   style="display:none;"
+                   accept="application/json">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Import</button>
+        <a href="{% url 'warehouses_list' %}" class="btn">Cancel</a>
+    </form>
+
+</div>
+
+<script>
+    document.getElementById("file-input").addEventListener("change", function() {
+        document.getElementById("file-name").textContent =
+            this.files.length > 0 ? this.files[0].name : "No file selected";
+    });
+</script>
+{% endblock %}

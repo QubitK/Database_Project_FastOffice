@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: DejaVu Sans, sans-serif; font-size: 12px; color: #000; margin: 0; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .company-info { width: 50%; }
+        .company-logo { font-weight: bold; font-size: 18px; margin-bottom: 5px; }
+        .customer-info { width: 45%; text-align: right; }
+        .line { border-top: 2px solid #000; margin: 10px 0 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
+        th, td { border: 1px solid #000; padding: 5px; text-align: left; }
+        th { background-color: #c8d6e5; }
+        .nested-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        .nested-table th, .nested-table td { border: 1px solid #555; padding: 3px; }
+        .nested-table th { background-color: #e2eaf2; }
+        .totals-row td { border: none; text-align: right; padding: 3px; }
+        .page-break { page-break-after: always; }
+    </style>
+</head>
+<body>
+    {% for data in invoices %}
+    {% with inv=data.invoice %}
+
+    <!-- Header -->
+    <div class="header">
+        <div class="company-info">
+            <div class="company-logo">FAST OFFICE</div>
+            <div>Rua Afonso Ribeiro</div>
+            <div>Lisboa, Portugal</div>
+            <div>contact@fastoffice.com</div>
+        </div>
+
+        <div class="customer-info">
+            <strong>{{ inv.name|default:"Client Name" }}</strong><br>
+            {{ inv.address|default:"Client Address" }}<br>
+            {{ inv.contact|default:"Client Contact" }}
+        </div>
+    </div>
+
+    <div class="line"></div>
+
+    <!-- Invoice Items Table -->
+    <table>
+        <tr>
+            <th>Shipment Type</th>
+            <th>Weight</th>
+            <th>Delivery Speed</th>
+            <th>Quantity</th>
+            <th>Unit Price (€)</th>
+            <th>Total (€)</th>
+        </tr>
+        {% for item in data.items %}
+        <tr>
+            <td>{{ item.shipment_type }}</td>
+            <td>{{ item.weight }}</td>
+            <td>{{ item.delivery_speed }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.unit_price }}</td>
+            <td>{{ item.total_price }}</td> <!-- use annotated total_price -->
+        </tr>
+        {% endfor %}
+
+        <!-- Subtotal, Tax, Total -->
+        <tr class="totals-row">
+            <td colspan="5"><strong>Subtotal (€)</strong></td>
+            <td>{{ data.subtotal }}</td>
+        </tr>
+        <tr class="totals-row">
+            <td colspan="5"><strong>Tax 23% (€)</strong></td>
+            <td>{{ data.tax }}</td>
+        </tr>
+        <tr class="totals-row">
+            <td colspan="5"><strong>Total (€)</strong></td>
+            <td>{{ data.total }}</td>
+        </tr>
+    </table>
+
+    <div class="page-break"></div>
+    {% endwith %}
+    {% endfor %}
+</body>
+</html>

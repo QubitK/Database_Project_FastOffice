@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Delivery Tracking{% endblock %}
+{% block content %}
+
+<div class="card" style="max-width:980px;margin:0 auto">
+  <h2 style="margin-top:0">Delivery Tracking</h2>
+
+  {# Delivery header info #}
+  <div class="card" style="margin-bottom:12px">
+    <div class="row">
+      <div style="flex:1">
+        <div class="muted">Delivery ID</div>
+        <div><strong>{{ delivery.id|default:delivery_id }}</strong></div>
+      </div>
+      <div style="flex:2">
+        <div class="muted">Tracking Number</div>
+        <div><strong>{{ delivery.tracking_number|default:tracking_number|default:"-" }}</strong></div>
+      </div>
+      <div style="flex:1">
+        <div class="muted">Status</div>
+        <div><strong>{{ delivery.status|default:"-" }}</strong></div>
+      </div>
+      <div style="flex:1">
+        <div class="muted">Priority</div>
+        <div><strong>{{ delivery.priority|default:"-" }}</strong></div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:10px">
+      <div style="flex:1">
+        <div class="muted">Warehouse</div>
+        <div>{{ delivery.warehouse_name|default:"-" }}</div>
+      </div>
+      <div style="flex:1">
+        <div class="muted">Client</div>
+        <div>{{ delivery.client_name|default:"-" }}</div>
+      </div>
+      <div style="flex:1">
+        <div class="muted">Driver</div>
+        <div>{{ delivery.driver_name|default:"-" }}</div>
+      </div>
+    </div>
+  </div>
+
+  {# Tracking timeline #}
+  <h3 style="margin:0 0 10px 0">Timeline</h3>
+
+  {% if tracking and tracking|length > 0 %}
+    <div style="overflow:auto">
+      <table class="table" style="width:100%">
+        <thead>
+          <tr>
+            <th style="white-space:nowrap">When</th>
+            <th>Status</th>
+            <th>Warehouse</th>
+            <th>Changed by</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in tracking %}
+            <tr>
+              <td style="white-space:nowrap">
+                {{ t.event_timestamp|date:"Y-m-d H:i" }}
+              </td>
+              <td>
+                <strong>{{ t.status }}</strong>
+              </td>
+              <td>
+                {{ t.warehouse_name|default:"-" }}
+              </td>
+              <td>
+                {{ t.changed_by_name|default:"-" }}
+              </td>
+              <td>
+                {{ t.notes|default:"-" }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="card">
+      <div class="muted">No tracking events found for this delivery.</div>
+    </div>
+  {% endif %}
+
+  <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+    {% if delivery.id %}
+      <a class="btn btn-primary" href="{% url 'deliveries_detail' delivery.id %}">Back to Delivery</a>
+    {% else %}
+      <a class="btn btn-primary" href="{% url 'deliveries_detail' delivery_id %}">Back to Delivery</a>
+    {% endif %}
+    <a class="btn" href="{% url 'deliveries_list' %}">Back to Deliveries</a>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title %}New Delivery{% endblock %}
+{% block content %}
+<div class="card" style="max-width:980px;margin:0 auto">
+  <h2 style="margin-top:0">Register New Delivery</h2>
+  {% if messages %}
+  <div style="margin:12px 0;">
+    {% for message in messages %}
+      <div class="card" style="margin-bottom:8px;">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% if form and form.errors %}
+  <div class="card" style="margin-bottom:12px; border:1px solid #f5c2c7;">
+    <strong>Form errors:</strong>
+    <div class="muted" style="margin-top:6px">{{ form.errors }}</div>
+  </div>
+{% endif %}
+
+  <form method="post">{% csrf_token %}
+
+    <div class="row">
+      <div style="flex:1">
+        <label>Driver ID</label>
+        <input type="number" name="driver_id" placeholder="e.g. 5" value="{{ form.data.driver_id|default:'' }}">
+      </div>
+      <div style="flex:1">
+        <label>Route ID</label>
+        <input type="number" name="route_id" placeholder="e.g. 2" value="{{ form.data.route_id|default:'' }}">
+      </div>
+      <div style="flex:1">
+        <label>Invoice ID</label>
+        <input type="number" name="inv_id" placeholder="e.g. 10" value="{{ form.data.inv_id|default:'' }}">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px">
+      <div style="flex:1">
+        <label>Client ID</label>
+        <input type="number" name="client_id" required value="{{ form.data.client_id|default:'' }}">
+      </div>
+      <div style="flex:1">
+        <label>Warehouse ID</label>
+        <input type="number" name="war_id" required value="{{ form.data.war_id|default:'' }}">
+      </div>
+      <div style="flex:1">
+        <label>Tracking number</label>
+        <input type="text" name="tracking_number" required value="{{ form.data.tracking_number|default:'' }}">
+      </div>
+    </div>
+
+    <label style="margin-top:12px">Description</label>
+    <textarea name="description" rows="3">{{ form.data.description|default:'' }}</textarea>
+
+    <div class="card" style="margin-top:12px">
+      <h3 style="margin-top:0">Sender</h3>
+      <div class="row">
+        <div style="flex:1">
+          <label>Name</label>
+          <input type="text" name="sender_name" required value="{{ form.data.sender_name|default:'' }}">
+        </div>
+        <div style="flex:1">
+          <label>Phone</label>
+          <input type="text" name="sender_phone" value="{{ form.data.sender_phone|default:'' }}">
+        </div>
+      </div>
+      <label style="margin-top:12px">Address</label>
+      <input type="text" name="sender_address" value="{{ form.data.sender_address|default:'' }}">
+      <label style="margin-top:12px">Email</label>
+      <input type="email" name="sender_email" value="{{ form.data.sender_email|default:'' }}">
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3 style="margin-top:0">Recipient</h3>
+      <div class="row">
+        <div style="flex:1">
+          <label>Name</label>
+          <input type="text" name="recipient_name" required value="{{ form.data.recipient_name|default:'' }}">
+        </div>
+        <div style="flex:1">
+          <label>Phone</label>
+          <input type="text" name="recipient_phone" value="{{ form.data.recipient_phone|default:'' }}">
+        </div>
+      </div>
+      <label style="margin-top:12px">Address</label>
+      <input type="text" name="recipient_address" value="{{ form.data.recipient_address|default:'' }}">
+      <label style="margin-top:12px">Email</label>
+      <input type="email" name="recipient_email" value="{{ form.data.recipient_email|default:'' }}">
+    </div>
+
+    <div class="row" style="margin-top:12px">
+      <div style="flex:1">
+        <label>Item type</label>
+        <input type="text" name="item_type" value="{{ form.data.item_type|default:'' }}">
+      </div>
+      <div style="flex:1">
+        <label>Weight</label>
+        <input type="text" name="weight" placeholder="e.g. 2.5" value="{{ form.data.weight|default:'' }}">
+      </div>
+      <div style="flex:1">
+        <label>Dimensions</label>
+        <input type="text" name="dimensions" placeholder="e.g. 30x20x10" value="{{ form.data.dimensions|default:'' }}">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px">
+      <div style="flex:1">
+        <label>Status</label>
+        <select name="status" required>
+          <option value="ready" {% if form.data.status == "ready" %}selected{% endif %}>ready</option>
+          <option value="in_transit" {% if form.data.status == "in_transit" %}selected{% endif %}>in_transit</option>
+          <option value="delayed" {% if form.data.status == "delayed" %}selected{% endif %}>delayed</option>
+          <option value="completed" {% if form.data.status == "completed" %}selected{% endif %}>completed</option>
+          <option value="cancelled" {% if form.data.status == "cancelled" %}selected{% endif %}>cancelled</option>
+        </select>
+      </div>
+      <div style="flex:1">
+        <label>Priority</label>
+        <select name="priority" required>
+          <option value="low" {% if form.data.priority == "low" %}selected{% endif %}>low</option>
+          <option value="normal" {% if not form.data.priority or form.data.priority == "normal" %}selected{% endif %}>normal</option>
+          <option value="high" {% if form.data.priority == "high" %}selected{% endif %}>high</option>
+          <option value="urgent" {% if form.data.priority == "urgent" %}selected{% endif %}>urgent</option>
+        </select>
+      </div>
+      <div style="flex:1">
+        <label>Delivery date</label>
+        <input type="date" name="delivery_date" value="{{ form.data.delivery_date|default:'' }}">
+      </div>
+    </div>
+
+    <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" type="submit">Save</button>
+      <a class="btn" href="{% url 'deliveries_list' %}">Cancel</a>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

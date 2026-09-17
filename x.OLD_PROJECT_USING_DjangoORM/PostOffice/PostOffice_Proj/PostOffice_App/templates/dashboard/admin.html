@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard — Mailly{% endblock %}
+{% block content %}
+<div class="grid">
+  <aside class="sidebar card">
+    <h3 style="margin-top:0">{{ role|title }}</h3>
+    <nav style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
+      {% if role == 'admin' %}
+        <a class="btn" href="{% url 'warehouses_list' %}"><i class="fa fa-warehouse"></i> Warehouses</a>
+        <a class="btn" href="{% url 'vehicles_list' %}"><i class="fa fa-car"></i> Vehicles</a>
+        <a class="btn" href="{% url 'routes_list' %}"><i class="fa fa-road"></i> Routes</a>
+        <a class="btn" href="{% url 'deliveries_list' %}"><i class="fa fa-truck"></i> Deliveries</a>
+        <a class="btn" href="{% url 'invoice_list' %}"><i class="fa fa-file-invoice"></i> Invoices</a>
+
+        {#  REMOVED — no such URL exists anymore  #}
+        {# <a class="btn" href="{% url 'employees_list' %}"><i class="fa fa-user-tie"></i> Employees</a> #}
+        {# <a class="btn" href="{% url 'clients_list' %}"><i class="fa fa-users"></i> Clients</a> #}
+
+      {% elif role == 'driver' %}
+        <a class="btn" href="{% url 'deliveries_list' %}"><i class="fa fa-truck"></i> My Deliveries</a>
+      {% else %}
+        <a class="btn" href="{% url 'client_profile' %}"><i class="fa fa-user"></i> Profile</a>
+        <a class="btn" href="{% url 'deliveries_list' %}"><i class="fa fa-truck"></i> My Deliveries</a>
+      {% endif %}
+    </nav>
+  </aside>
+
+  <section>
+    {% if role == 'admin' %}
+      <div class="stats">
+        <div class="stat card">
+          <div class="muted">Vehicles</div>
+          <h3>{{ stats.total_vehicles }}</h3>
+        </div>
+        <div class="stat card">
+          <div class="muted">Deliveries</div>
+          <h3>{{ stats.total_deliveries }}</h3>
+        </div>
+        <div class="stat card">
+          <div class="muted">Clients</div>
+          <h3>{{ stats.total_clients }}</h3>
+        </div>
+
+        <div class="stat card">
+          <div class="muted">Employees</div>
+          <h3>{{ stats.total_employees }}</h3>
+        </div>
+      </div>
+
+      <div class="stats" style="margin-top:12px">
+        <div class="stat card">
+          <div class="muted">Active Routes</div>
+          <h3>{{ stats.active_routes }}</h3>
+        </div>
+        <div class="stat card">
+          <div class="muted">Pending Deliveries</div>
+          <h3>{{ stats.pending_deliveries }}</h3>
+        </div>
+        <div class="stat card">
+          <div class="muted">Invoices</div>
+          <h3>{{ stats.total_invoices }}</h3>
+        </div>
+      </div>
+
+    {% else %}
+      <div class="card">
+        <h4 style="margin:0 0 12px">My Deliveries</h4>
+        <table class="table">
+          <thead>
+            <tr><th>Tracking</th><th>To</th><th>Date</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            {% for d in stats.my_deliveries %}
+              <tr>
+                <td>{{ d.tracking_number }}</td>
+                <td class="muted">{{ d.recipient_name }}</td>
+                <td class="muted">{{ d.registered_at|date:'Y-m-d' }}</td>
+                <td>{{ d.status }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4" class="muted">No deliveries</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

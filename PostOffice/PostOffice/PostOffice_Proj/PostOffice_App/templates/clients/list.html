@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Clients — Mailly{% endblock %}
+{% block content %}
+
+<div style="display:flex; justify-content:space-between; align-items:center;">
+  <h3 style="margin:0;">Clients</h3>
+
+  {% if request.user.role == 'admin' %}
+    <a class="btn btn-primary" href="{% url 'clients_create' %}">+ New Client</a>
+  {% endif %}
+</div>
+
+<div class="card" style="margin-top:12px;">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Contact</th>
+        <th>Address</th>
+        <th>Tax ID</th>
+        <th>Status</th>
+        <th style="text-align:right;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in clients %}
+      <tr>
+        <td><strong>{{ c.full_name }}</strong></td>
+        <td>{{ c.email }}</td>
+        <td class="muted">{{ c.contact }}</td>
+        <td class="muted">{{ c.address }}</td>
+        <td class="muted">{{ c.tax_id }}</td>
+        <td>
+          {% if c.is_active %}Active{% else %}Inactive{% endif %}
+        </td>
+        <td style="text-align:right;">
+          {% if request.user.role == 'admin' %}
+            <a class="btn" href="{% url 'clients_update' c.id %}">Edit</a>
+            <form method="post" action="{% url 'clients_delete' c.id %}" style="display:inline;">
+              {% csrf_token %}
+              <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" class="muted" style="text-align:center; padding:16px;">No clients</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

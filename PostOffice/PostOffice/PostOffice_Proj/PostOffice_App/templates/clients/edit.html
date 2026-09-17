@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Edit Client — Mailly{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="card" style="max-width:700px;margin:0 auto">
+    <h3>Edit Client</h3>
+
+    <form method="post" style="margin-top:12px">
+      {% csrf_token %}
+
+      <div style="margin-top:12px">
+        <label>Email</label>
+        <input class="input" type="email" name="email" value="{{ client.email }}">
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:12px;">
+        <div style="flex:1">
+          <label>First Name</label>
+          <input class="input" type="text" name="first_name" value="{{ client.first_name }}">
+        </div>
+        <div style="flex:1">
+          <label>Last Name</label>
+          <input class="input" type="text" name="last_name" value="{{ client.last_name }}">
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Contact</label>
+        <input class="input" type="text" name="contact" value="{{ client.contact }}">
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Address</label>
+        <input class="input" type="text" name="address" value="{{ client.address }}">
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Tax ID</label>
+        <input class="input" type="text" name="tax_id" value="{{ client.tax_id }}">
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Active</label>
+        <select class="input" name="is_active">
+          <option value="true" {% if client.is_active %}selected{% endif %}>Yes</option>
+          <option value="false" {% if not client.is_active %}selected{% endif %}>No</option>
+        </select>
+      </div>
+
+      <div style="margin-top:18px;display:flex;gap:12px">
+        <button class="btn btn-primary" type="submit">Save Changes</button>
+        <a class="btn" href="{% url 'clients_list' %}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

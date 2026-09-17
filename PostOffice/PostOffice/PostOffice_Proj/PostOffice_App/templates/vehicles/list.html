@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}Vehicles — Mailly{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center;">
+  <h3 style="margin:0;">Vehicles</h3>
+  <div style="display:flex; gap:8px;">
+    {% if request.user.role == 'admin' or request.user.role == 'manager' %}
+      <a class="btn btn-primary" href="{% url 'vehicles_create' %}">
+        + New Vehicle
+      </a>
+    {% endif %}
+      {% if request.user.role == 'admin' or request.user.role == 'manager' %}
+      <a class="btn btn-warning" href="{% url 'vehicles_import_json' %}">
+        <i class="fa fa-upload"></i> Import JSON
+      </a>
+    {% endif %}
+    <a class="btn btn-success" href="{% url 'vehicles_export_json' %}">
+      <i class="fa fa-download"></i> Export JSON
+    </a>
+    <a class="btn btn-info" href="{% url 'vehicles_export_csv' %}">
+      <i class="fa fa-file-csv"></i> Export CSV
+    </a>
+  </div>
+</div>
+<div class="card" style="margin-top:12px;">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Plate</th>
+        <th>Model</th>
+        <th>Brand</th>
+        <th>Status</th>
+        <th>Year</th>
+        <th>Fuel</th>
+        <th>Capacity</th>
+        <th>Last Maintenance</th>
+        <th style="text-align:right;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in vehicles %}
+      <tr>
+        <td><strong>{{ v.plate_number }}</strong></td>
+        <td class="muted">{{ v.model }}</td>
+        <td class="muted">{{ v.brand }}</td>
+        <td>
+          {% if v.vehicle_status %}
+            {{ v.vehicle_status|title }}
+          {% else %}
+            <span class="muted">Unknown</span>
+          {% endif %}
+        </td>
+        <td class="muted">
+          {% if v.year %}
+            {{ v.year }}
+          {% else %}
+            —
+          {% endif %}
+        </td>
+        <td class="muted">
+          {% if v.fuel_type %}
+            {{ v.fuel_type|title }}
+          {% else %}
+            —
+          {% endif %}
+        </td>
+        <td class="muted">
+          {% if v.capacity %}
+            {{ v.capacity }} kg
+          {% else %}
+            —
+          {% endif %}
+        </td>
+        <td class="muted">
+          {% if v.last_maintenance_date %}
+            {{ v.last_maintenance_date }}
+          {% else %}
+            —
+          {% endif %}
+        </td>
+        <td style="text-align:right;">
+          {% if request.user.role == 'admin' or request.user.role == 'manager' %}
+            <a class="btn" href="{% url 'vehicles_edit' v.id %}">Edit</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="9" class="muted" style="text-align:center; padding:16px;">
+          No vehicles
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

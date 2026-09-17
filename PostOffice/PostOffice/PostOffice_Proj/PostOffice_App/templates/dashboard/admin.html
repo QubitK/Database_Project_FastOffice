@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — Mailly{% endblock %}
+{% block content %}
+<div class="grid">
+  <aside class="sidebar card">
+    <h3 style="margin-top:0">{{ role|title }}</h3>
+    <nav style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
+      {% if role == 'admin' %}
+        <a class="btn" href="{% url 'warehouses_list' %}"><i class="fa fa-warehouse"></i> Warehouses</a>
+        <a class="btn" href="{% url 'vehicles_list' %}"><i class="fa fa-car"></i> Vehicles</a>
+        <a class="btn" href="{% url 'routes_list' %}"><i class="fa fa-road"></i> Routes</a>
+        <a class="btn" href="{% url 'deliveries_list' %}"><i class="fa fa-truck"></i> Deliveries</a>
+        <a class="btn" href="{% url 'invoice_list' %}"><i class="fa fa-file-invoice"></i> Invoices</a>
+        <a class="btn" href="{% url 'clients_list' %}"><i class="fa fa-users"></i> Clients</a>
+        <a class="btn" href="{% url 'employees_list' %}"><i class="fa fa-user-tie"></i> Employees</a>
+
+        {#  REMOVED — no such URL exists anymore  #}
+        {# <a class="btn" href="{% url 'employees_list' %}"><i class="fa fa-user-tie"></i> Employees</a> #}
+        {# <a class="btn" href="{% url 'clients_list' %}"><i class="fa fa-users"></i> Clients</a> #}
+
+      {% elif role == 'driver' %}
+        <a class="btn" href="{% url 'deliveries_list' %}"><i class="fa fa-truck"></i> My Deliveries</a>
+      {% else %}
+        <a class="btn" href="{% url 'client_profile' %}"><i class="fa fa-user"></i> Profile</a>
+        <a class="btn" href="{% url 'deliveries_list' %}"><i class="fa fa-truck"></i> My Deliveries</a>
+      {% endif %}
+    </nav>
+  </aside>
+
+  <section>
+    {% if role == 'admin' or role == 'manager' %}
+      <div class="stats">
+        <div class="stat card">
+          <div class="muted">Vehicles</div>
+          <h3>{{ stats.total_vehicles }}</h3>
+        </div>
+        <div class="stat card">
+          <div class="muted">Deliveries</div>
+          <h3>{{ stats.total_deliveries }}</h3>
+        </div>
+        <div class="stat card">
+          <div class="muted">Clients</div>
+          <h3>{{ stats.total_clients }}</h3>
+        </div>
+
+        <div class="stat card">
+          <div class="muted">Employees</div>
+          <h3>{{ stats.total_employees }}</h3>
+        </div>
+      </div>
+
+      <div class="stats" style="margin-top:12px">
+        <div class="stat card">
+          <div class="muted">Active Routes</div>
+          <h3>{{ stats.active_routes }}</h3>
+        </div>
+        <div class="stat card">
+          <div class="muted">On going Deliveries</div>
+          <h3>{{ stats.pending_deliveries }}</h3>
+        </div>
+        <div class="stat card">
+          <div class="muted">Invoices</div>
+          <h3>{{ stats.total_invoices }}</h3>
+        </div>
+      </div>
+
+    {% elif role == 'driver' or role == 'client' %}
+      <div class="stats">
+        <div class="stat card">
+          <div class="muted">My Deliveries</div>
+          <h3>{{ stats.my_deliveries }}</h3>
+        </div>
+      </div>
+
+    {% else %}
+      <div class="stats">
+        <div class="stat card">
+          <div class="muted">Total Deliveries</div>
+          <h3>{{ stats.total_deliveries }}</h3>
+        </div>
+      </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}
