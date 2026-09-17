@@ -7,7 +7,7 @@ Combination of PostgreSQL, MongoDB, and Django ORM, with each technology being u
    * Django ORM is implemented alongside PostGreSQL specifically for user identity and authentication, taking advantage of Django's built-in security framework
 
 ### Database-level Business Logic
-Core business logic is enforced directly at the database level using PostgreSQL, which is a central focus of the project.
+Core business logic is enforced directly at the database level using PostgreSQL, which is the central focus of the project.
 - CRUD operations are implemented through stored procedures and database functions written in PL/pgSQL, rather than relying on direct table manipulation
 - Relational data is protected by integrity constraints, ensuring consistency across related data
 - Centralizing business rules within the database makes the system less dependent on the specific client or frontend implementation
